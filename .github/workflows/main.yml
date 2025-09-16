@@ -21,9 +21,7 @@ jobs:
     - name: Publish
       run: dotnet publish "cmcs.sln" --no-build --configuration Release --output ${{ env.DOTNET_ROOT }}/publish
     - name: Upload a build artifact
-      uses: actions/upload-artifact@v4 
+      uses: actions/upload-artifact@v4
       with:
-        name: web-app
-        path: ${{ env.DOTNET_ROOT }}/publish
         name: web-app
         path: ${{ env.DOTNET_ROOT }}/publish
