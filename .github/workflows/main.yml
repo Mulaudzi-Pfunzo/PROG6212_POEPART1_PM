@@ -1,0 +1,27 @@
+name: .NET Core CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x' 
+    - name: Restore dependencies
+      run: dotnet restore "cmcs.sln"
+    - name: Build
+      run: dotnet build "cmcs.sln" --no-restore --configuration Release
+    - name: Publish
+      run: dotnet publish "cmcs.sln" --no-build --configuration Release --output ${{ env.DOTNET_ROOT }}/publish
+    - name: Upload a build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: web-app
+        path: ${{ env.DOTNET_ROOT }}/publish
