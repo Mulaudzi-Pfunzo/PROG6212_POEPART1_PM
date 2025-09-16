@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  SOLUTION_PATH: 'CMCS/CMCS.sln' 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,11 +18,11 @@ jobs:
       with:
         dotnet-version: '9.0.x'
     - name: Restore dependencies
-      run: dotnet restore "cmcs.sln"
+      run: dotnet restore "${{ env.SOLUTION_PATH }}"
     - name: Build
-      run: dotnet build "cmcs.sln" --no-restore --configuration Release
+      run: dotnet build "${{ env.SOLUTION_PATH }}" --no-restore --configuration Release
     - name: Publish
-      run: dotnet publish "cmcs.sln" --no-build --configuration Release --output ${{ env.DOTNET_ROOT }}/publish
+      run: dotnet publish "${{ env.SOLUTION_PATH }}" --no-build --configuration Release --output ${{ env.DOTNET_ROOT }}/publish
     - name: Upload a build artifact
       uses: actions/upload-artifact@v4
       with:
