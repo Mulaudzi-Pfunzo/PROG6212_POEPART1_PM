@@ -1,31 +1,181 @@
-html {
-  font-size: 14px;
-}
 
-@media (min-width: 768px) {
-  html {
+html {
     font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    scroll-behavior: smooth;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #e4e9f0);
+    color: #333;
+    margin-bottom: 60px;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* ==============================
+   Navbar
+   ============================== */
+.navbar {
+    background: linear-gradient(90deg, #0056b3, #007bff);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    .navbar .nav-link {
+        color: #fff !important;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+        .navbar .nav-link:hover {
+            color: #ffc107 !important;
+        }
+
+.navbar-brand {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #fff !important;
+}
+
+/* ==============================
+   Cards & Dashboard Tiles
+   ============================== */
+.card {
+    border-radius: 15px;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+.card-title {
+    font-weight: 600;
+}
+
+.card i {
+    transition: transform 0.3s ease;
+}
+
+.card:hover i {
+    transform: scale(1.2);
+}
+
+/* ==============================
+   Buttons
+   ============================== */
+.btn {
+    border-radius: 30px;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #0062E6, #33AEFF);
+    border: none;
+}
+
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #004BB5, #1C92FF);
+        transform: translateY(-2px);
+    }
+
+.btn-success {
+    background: linear-gradient(45deg, #28a745, #56d879);
+    border: none;
+}
+
+    .btn-success:hover {
+        background: linear-gradient(45deg, #1e7e34, #34c759);
+        transform: translateY(-2px);
+    }
+
+.btn-warning {
+    background: linear-gradient(45deg, #ffc107, #ffda6a);
+    border: none;
+    color: #212529;
+}
+
+    .btn-warning:hover {
+        background: linear-gradient(45deg, #e0a800, #ffd23f);
+        transform: translateY(-2px);
+    }
+
+.btn-info {
+    background: linear-gradient(45deg, #17a2b8, #63e6f5);
+    border: none;
+    color: #fff;
+}
+
+    .btn-info:hover {
+        background: linear-gradient(45deg, #138496, #2dd4f7);
+        transform: translateY(-2px);
+    }
+
+/* ==============================
+   Tables
+   ============================== */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+    .table thead {
+        background: linear-gradient(90deg, #007bff, #33AEFF);
+        color: #fff;
+        font-weight: 600;
+    }
+
+.table-hover tbody tr:hover {
+    background-color: #f1f9ff;
+    transition: background-color 0.3s ease;
+}
+
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5em 0.8em;
+    border-radius: 10px;
+}
+
+/* ==============================
+   Forms
+   ============================== */
+form {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+input[type="file"] {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    background: #f9f9f9;
+    cursor: pointer;
+}
+
+    input[type="file"]:hover {
+        border-color: #007bff;
+        background: #f1f9ff;
+    }
+
+/* ==============================
+   Footer
+   ============================== */
+footer {
+    background: #f1f1f1;
+    padding: 15px 0;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #666;
 }
