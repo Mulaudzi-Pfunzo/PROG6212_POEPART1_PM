@@ -1,0 +1,30 @@
+name: .NET Core CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  SOLUTION_PATH: 'CMCS/CMCS.sln' 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+    - name: Restore dependencies
+      run: dotnet restore "${{ env.SOLUTION_PATH }}"
+    - name: Build
+      run: dotnet build "${{ env.SOLUTION_PATH }}" --no-restore --configuration Release
+    - name: Publish
+      run: dotnet publish "${{ env.SOLUTION_PATH }}" --no-build --configuration Release --output ${{ env.DOTNET_ROOT }}/publish
+    - name: Upload a build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-app
+        path: ${{ env.DOTNET_ROOT }}/publish
