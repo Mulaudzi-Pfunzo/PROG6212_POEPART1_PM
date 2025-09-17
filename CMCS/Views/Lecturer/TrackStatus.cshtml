@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Track Status";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold mb-3">Track Claim Status</h2>
+
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="table-primary">
+            <tr>
+                <th>Claim ID</th>
+                <th>Date Submitted</th>
+                <th>Hours Worked</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>CLM001</td>
+                <td>2025-09-10</td>
+                <td>20</td>
+                <td>R7000</td>
+                <td><span class="badge bg-warning text-dark">Pending</span></td>
+            </tr>
+            <tr>
+                <td>CLM002</td>
+                <td>2025-08-05</td>
+                <td>15</td>
+                <td>R5250</td>
+                <td><span class="badge bg-success">Approved</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

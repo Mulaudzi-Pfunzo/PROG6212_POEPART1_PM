@@ -1,5 +1,45 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Lecturer Dashboard";
 }
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary fw-bold">Lecturer Dashboard</h2>
+
+    <div class="row g-4">
+        <!-- Submit Claim -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-file-earmark-plus display-4 text-primary"></i>
+                    <h5 class="card-title mt-3">Submit Claim</h5>
+                    <p class="card-text">Record new working hours and submit your monthly claim.</p>
+                    <a class="btn btn-primary" asp-controller="Lecturer" asp-action="SubmitClaim">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Track Status -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-clipboard-data display-4 text-success"></i>
+                    <h5 class="card-title mt-3">Track Status</h5>
+                    <p class="card-text">View the progress and approval status of submitted claims.</p>
+                    <a class="btn btn-success" asp-controller="Lecturer" asp-action="TrackStatus">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Documents -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-upload display-4 text-info"></i>
+                    <h5 class="card-title mt-3">Upload Documents</h5>
+                    <p class="card-text">Attach supporting evidence such as schedules and contracts.</p>
+                    <a class="btn btn-info text-white" asp-controller="Lecturer" asp-action="UploadDocument">Go</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
