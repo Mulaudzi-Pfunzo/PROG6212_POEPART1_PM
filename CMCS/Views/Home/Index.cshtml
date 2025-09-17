@@ -1,8 +1,42 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "CMCS Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+    <div class="row justify-content-center text-center mb-5">
+        <div class="col-lg-8">
+            <h1 class="display-4 fw-bold text-dark">Welcome to the Contract Monthly Claim System</h1>
+            <p class="lead text-muted mt-3">
+                CMCS is your all-in-one solution for managing independent contractor claims. Our system simplifies the process, ensuring accuracy, transparency, and efficiency for both lecturers and administrators.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4 text-center">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0 rounded-4 p-4">
+                <div class="card-body">
+                    <i class="bi bi-person-workspace text-primary display-4 mb-3"></i>
+                    <h5 class="card-title fw-bold">For Lecturers</h5>
+                    <p class="card-text text-muted">
+                        Submit your monthly claims and supporting documentation with ease. Track the status of your claims in real-time and ensure a transparent and reliable process from submission to settlement.
+                    </p>
+                    <a asp-controller="Lecturer" asp-action="SubmitClaim" class="btn btn-primary mt-3">Submit a Claim</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0 rounded-4 p-4">
+                <div class="card-body">
+                    <i class="bi bi-people text-success display-4 mb-3"></i>
+                    <h5 class="card-title fw-bold">For Coordinators & Managers</h5>
+                    <p class="card-text text-muted">
+                        Efficiently verify and approve claims with a streamlined, intuitive interface. CMCS provides a clear overview of all pending claims, allowing for quick and accurate processing.
+                    </p>
+                    <a asp-controller="Coordinator" asp-action="Approvals" class="btn btn-success mt-3">Manage Claims</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
