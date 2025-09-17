@@ -1,51 +1,86 @@
-﻿<!DOCTYPE html>
+﻿@* Views/Shared/_Layout.cshtml *@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CMCS</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CMCS.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CMCS</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <a class="navbar-brand fw-bold text-white" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-journal-text"></i> CMCS
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <!-- Lecturer Section -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="lecturerDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Lecturer
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="lecturerDropdown">
+                                <li><a class="dropdown-item" asp-controller="Lecturer" asp-action="Dashboard">Dashboard</a></li>
+                                <li><a class="dropdown-item" asp-controller="Lecturer" asp-action="SubmitClaim">Submit Claim</a></li>
+                                <li><a class="dropdown-item" asp-controller="Lecturer" asp-action="TrackStatus">Track Status</a></li>
+                            </ul>
                         </li>
+
+                        <!-- Coordinator Section -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="coordDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Coordinator
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="coordDropdown">
+                                <li><a class="dropdown-item" asp-controller="Coordinator" asp-action="Dashboard">Dashboard</a></li>
+                                <li><a class="dropdown-item" asp-controller="Coordinator" asp-action="Approvals">Manage Claims</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- General Pages -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
-                    <partial name="_LoginPartial" />
+
+                    <!-- Login placeholder -->
+                    <div class="d-flex">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container mt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="bg-light border-top text-center py-3 mt-4 shadow-sm">
         <div class="container">
-            &copy; 2025 - CMCS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <span class="text-muted">&copy; 2025 - CMCS</span>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
