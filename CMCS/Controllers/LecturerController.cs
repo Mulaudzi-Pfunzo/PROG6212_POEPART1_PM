@@ -108,13 +108,21 @@ namespace CMCS.Controllers
         // ===========================
         public async Task<IActionResult> TrackStatus()
         {
-            var claims = await _context.Claims
-                .Include(c => c.LecturerID)
-                .OrderByDescending(c => c.ClaimDate)
-                .ToListAsync();
+            try
+            {
+                var claims = await _context.Claims
+                    .OrderByDescending(c => c.ClaimDate)
+                    .ToListAsync();
 
-            return View(claims);
+                return View(claims);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = $"An error occurred while loading your claims: {ex.Message}";
+                return View(new List<Claim>());
+            }
         }
+
 
         // ===========================
         // Upload Document (GET)

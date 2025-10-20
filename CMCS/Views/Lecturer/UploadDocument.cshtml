@@ -1,22 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Upload Document";
     var claims = ViewBag.Claims as List<CMCS.Models.Claim>;
+    var documents = ViewBag.Documents as List<CMCS.Models.Document>;
 }
 
 <div class="container mt-4">
-    <h2 class="text-primary fw-bold mb-3">Upload Supporting Documents</h2>
+    <h2 class="text-primary fw-bold mb-3">
+        <i class="bi bi-cloud-arrow-up"></i> Upload Supporting Documents
+    </h2>
 
     <!-- Success & Error Alerts -->
     @if (ViewBag.SuccessMessage != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
             <i class="bi bi-check-circle-fill"></i> @ViewBag.SuccessMessage
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
     @if (ViewBag.ErrorMessage != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
             <i class="bi bi-exclamation-triangle-fill"></i> @ViewBag.ErrorMessage
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
@@ -46,56 +49,93 @@
 
         <div class="mb-3">
             <label for="file" class="form-label fw-semibold">Choose File</label>
-            <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.png" required />
+            <input type="file" id="file" name="file" class="form-control"
+                   accept=".pdf,.doc,.docx,.jpg,.png" required />
             <div class="form-text">Accepted formats: PDF, Word, JPG, PNG (max size 5MB)</div>
         </div>
 
-        <button type="submit" class="btn btn-info text-white fw-semibold w-100">
-            <i class="bi bi-upload"></i> Upload Document
-        </button>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary fw-semibold">
+                <i class="bi bi-upload"></i> Upload Document
+            </button>
+        </div>
+
+        <!-- Upload Progress Bar -->
+        <div id="uploadProgress" class="progress mt-3 d-none">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                 role="progressbar" style="width: 0%;"></div>
+        </div>
     </form>
 
     <hr class="my-4" />
 
     <!-- Display Uploaded Documents -->
-    <h4 class="text-secondary mt-4">Recently Uploaded Files</h4>
-    <div class="table-responsive shadow-sm">
-        <table class="table table-striped align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>File Name</th>
-                    <th>Type</th>
-                    <th>Date Uploaded</th>
-                    <th>Claim ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (claims != null && claims.Any())
-                {
-                    var uploadedDocs = new List<CMCS.Models.Document>();
-                    foreach (var claim in claims)
-                    {
-                        var docs = new List<CMCS.Models.Document>(); // Placeholder if you extend ViewBag for documents
-                    }
+    <h4 class="text-secondary mt-4">
+        <i class="bi bi-files"></i> Uploaded Documents
+    </h4>
 
+    @if (documents != null && documents.Any())
+    {
+        <div class="table-responsive shadow-sm mt-3">
+            <table class="table table-striped align-middle">
+                <thead class="table-primary">
                     <tr>
-                        <td colspan="4" class="text-center text-muted">
-                            Uploaded documents will appear here once the feature is expanded.
-                        </td>
+                        <th>File Name</th>
+                        <th>Type</th>
+                        <th>Date Uploaded</th>
+                        <th>Claim ID</th>
+                        <th>Preview</th>
                     </tr>
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4" class="text-center text-muted">
-                            No claims found to display documents for.
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var doc in documents)
+                    {
+                        <tr>
+                            <td>@doc.FileName</td>
+                            <td>@doc.FileType</td>
+                            <td>@doc.UploadDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@doc.ClaimID</td>
+                            <td>
+                                <a href="@doc.FilePath" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center shadow-sm mt-3">
+            <i class="bi bi-info-circle"></i> No documents uploaded yet.
+            Upload your first supporting document above.
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        // Simulated progress bar animation
+        const form = document.querySelector("form");
+        const progressDiv = document.getElementById("uploadProgress");
+        const progressBar = document.querySelector(".progress-bar");
+
+        form.addEventListener("submit", () => {
+            progressDiv.classList.remove("d-none");
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                } else {
+                    width += 10;
+                    progressBar.style.width = width + "%";
+                }
+            }, 150);
+        });
+    </script>
+}
 
 <style>
     .form-select:focus, .form-control:focus {
@@ -105,5 +145,11 @@
 
     table th {
         font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f2f8ff;
+        transition: background-color 0.2s ease-in-out;
     }
 </style>

@@ -25,6 +25,7 @@ namespace CMCS.Controllers
                 ViewBag.PendingClaims = _context.Claims.Count(c => c.Status == "Pending");
                 ViewBag.ApprovedClaims = _context.Claims.Count(c => c.Status == "Approved");
                 ViewBag.RejectedClaims = _context.Claims.Count(c => c.Status == "Rejected");
+
                 return View();
             }
             catch (Exception ex)
@@ -40,12 +41,26 @@ namespace CMCS.Controllers
         {
             try
             {
+                // Join Claims with Lecturers for display (avoid .Include() on scalar property)
                 var claims = _context.Claims
-                    .Include(c => c.LecturerID)
+                    .Join(
+                        _context.Lecturers,
+                        claim => claim.LecturerID,
+                        lecturer => lecturer.LecturerID,
+                        (claim, lecturer) => new
+                        {
+                            claim.ClaimID,
+                            claim.ClaimDate,
+                            claim.HoursWorked,
+                            claim.HourlyRate,
+                            claim.Status,
+                            LecturerName = lecturer.FirstName + " " + lecturer.LastName
+                        }
+                    )
                     .OrderByDescending(c => c.ClaimDate)
                     .ToList();
 
-                if (claims.Count == 0)
+                if (!claims.Any())
                     TempData["Info"] = "No claims found in the system.";
 
                 return View(claims);
