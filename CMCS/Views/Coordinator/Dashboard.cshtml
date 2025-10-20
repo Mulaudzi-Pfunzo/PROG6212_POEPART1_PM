@@ -3,30 +3,70 @@
 }
 
 <div class="container mt-4">
-    <h2 class="mb-4 text-primary fw-bold">Coordinator Dashboard</h2>
+    <h2 class="mb-4 text-primary fw-bold text-center">Coordinator Dashboard</h2>
 
+    <!-- Overview Cards -->
     <div class="row g-4">
         <!-- Pending Claims -->
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-hourglass-split display-4 text-warning"></i>
-                    <h5 class="card-title mt-3">Pending Claims</h5>
-                    <p class="card-text">View and manage claims awaiting review.</p>
-                    <a class="btn btn-warning text-dark" asp-controller="Coordinator" asp-action="Approvals">Go</a>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-warning bg-gradient text-white text-center">
+                <div class="card-body">
+                    <i class="bi bi-hourglass-split display-4 mb-2"></i>
+                    <h5 class="card-title fw-bold">Pending Claims</h5>
+                    <h3 class="display-6">@ViewBag.PendingClaims</h3>
+                    <a asp-controller="Coordinator" asp-action="Approvals" class="btn btn-light btn-sm mt-2">Manage</a>
                 </div>
             </div>
         </div>
 
         <!-- Approved Claims -->
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-check-circle display-4 text-success"></i>
-                    <h5 class="card-title mt-3">Approved Claims</h5>
-                    <p class="card-text">Keep track of lecturer claims that have been approved.</p>
-                    <a class="btn btn-success" asp-controller="Coordinator" asp-action="Approvals">Go</a>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-success bg-gradient text-white text-center">
+                <div class="card-body">
+                    <i class="bi bi-check-circle display-4 mb-2"></i>
+                    <h5 class="card-title fw-bold">Approved Claims</h5>
+                    <h3 class="display-6">@ViewBag.ApprovedClaims</h3>
+                    <a asp-controller="Coordinator" asp-action="Approvals" class="btn btn-light btn-sm mt-2">View</a>
                 </div>
+            </div>
+        </div>
+
+        <!-- Rejected Claims -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-danger bg-gradient text-white text-center">
+                <div class="card-body">
+                    <i class="bi bi-x-circle display-4 mb-2"></i>
+                    <h5 class="card-title fw-bold">Rejected Claims</h5>
+                    <h3 class="display-6">@ViewBag.RejectedClaims</h3>
+                    <a asp-controller="Coordinator" asp-action="Approvals" class="btn btn-light btn-sm mt-2">Review</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Claims -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-primary bg-gradient text-white text-center">
+                <div class="card-body">
+                    <i class="bi bi-collection display-4 mb-2"></i>
+                    <h5 class="card-title fw-bold">Total Claims</h5>
+                    <h3 class="display-6">@ViewBag.TotalClaims</h3>
+                    <a asp-controller="Coordinator" asp-action="Approvals" class="btn btn-light btn-sm mt-2">All Claims</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5 class="fw-bold mb-3 text-secondary">Quick Actions</h5>
+                <a asp-controller="Coordinator" asp-action="Approvals" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-clipboard-check"></i> Review Claims
+                </a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-house"></i> Back to Home
+                </a>
             </div>
         </div>
     </div>

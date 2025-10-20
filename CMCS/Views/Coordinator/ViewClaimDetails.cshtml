@@ -1,0 +1,147 @@
+﻿@model CMCS.Models.Claim
+@{
+    ViewData["Title"] = "Claim Details";
+    var lecturer = ViewBag.Lecturer as CMCS.Models.Lecturer;
+    var documents = ViewBag.Documents as List<CMCS.Models.Document>;
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold mb-3">Claim Details</h2>
+
+    <!-- Claim Summary -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Claim Information</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Claim ID:</dt>
+                <dd class="col-sm-9">@Model.ClaimID</dd>
+
+                <dt class="col-sm-3">Date Submitted:</dt>
+                <dd class="col-sm-9">@Model.ClaimDate.ToShortDateString()</dd>
+
+                <dt class="col-sm-3">Hours Worked:</dt>
+                <dd class="col-sm-9">@Model.HoursWorked</dd>
+
+                <dt class="col-sm-3">Hourly Rate:</dt>
+                <dd class="col-sm-9">R @Model.HourlyRate</dd>
+
+                <dt class="col-sm-3">Total Amount:</dt>
+                <dd class="col-sm-9 fw-bold text-success">R @( (decimal)Model.HoursWorked * Model.HourlyRate )</dd>
+
+
+                <dt class="col-sm-3">Status:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Status == "Pending")
+                    {
+                    <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                    else if (Model.Status == "Approved")
+                    {
+                    <span class="badge bg-success">Approved</span>
+                    }
+                    else
+                    {
+                    <span class="badge bg-danger">Rejected</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Lecturer Info -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Lecturer Information</h5>
+        </div>
+        <div class="card-body">
+            @if (lecturer != null)
+            {
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Name:</dt>
+                    <dd class="col-sm-9">@lecturer.FirstName @lecturer.LastName</dd>
+
+                    <dt class="col-sm-3">Email:</dt>
+                    <dd class="col-sm-9">@lecturer.Email</dd>
+
+                    <dt class="col-sm-3">Phone:</dt>
+                    <dd class="col-sm-9">@lecturer.Phone</dd>
+
+                    <dt class="col-sm-3">Staff Number:</dt>
+                    <dd class="col-sm-9">@lecturer.StaffNumber</dd>
+                </dl>
+            }
+            else
+            {
+                <p class="text-muted">Lecturer information not available.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Documents -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Supporting Documents</h5>
+        </div>
+        <div class="card-body">
+            @if (documents != null && documents.Any())
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var doc in documents)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="bi bi-paperclip"></i> @doc.FileName
+                                <small class="text-muted">(@doc.FileType)</small>
+                            </span>
+                            <a href="@doc.FilePath" class="btn btn-outline-primary btn-sm" target="_blank">
+                                View
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">No supporting documents uploaded.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Approval Actions -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Coordinator Action</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="UpdateClaimStatus" method="post" class="row g-3">
+                <input type="hidden" name="claimId" value="@Model.ClaimID" />
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Coordinator Comments</label>
+                    <textarea name="comments" class="form-control" rows="3" placeholder="Enter any remarks..." required></textarea>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+                    <button type="submit" name="status" value="Approved" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Approve
+                    </button>
+                    <button type="submit" name="status" value="Rejected" class="btn btn-danger">
+                        <i class="bi bi-x-circle"></i> Reject
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    dl dt {
+        font-weight: 600;
+    }
+
+    .card-header {
+        font-size: 1rem;
+    }
+</style>

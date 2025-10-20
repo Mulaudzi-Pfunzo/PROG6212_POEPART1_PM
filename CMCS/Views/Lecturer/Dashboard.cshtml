@@ -5,41 +5,82 @@
 <div class="container mt-4">
     <h2 class="mb-4 text-primary fw-bold">Lecturer Dashboard</h2>
 
+    <!-- Overview Cards -->
+    <div class="row text-center mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="text-secondary">Total Claims</h5>
+                    <h3 class="fw-bold text-primary">@ViewBag.TotalClaims</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="text-secondary">Pending</h5>
+                    <h3 class="fw-bold text-warning">@ViewBag.PendingClaims</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="text-secondary">Approved</h5>
+                    <h3 class="fw-bold text-success">@ViewBag.ApprovedClaims</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="text-secondary">Rejected</h5>
+                    <h3 class="fw-bold text-danger">@ViewBag.RejectedClaims</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tiles -->
     <div class="row g-4">
-        <!-- Submit Claim -->
         <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
+            <div class="card shadow-sm border-0 h-100 hover-zoom">
                 <div class="card-body text-center">
                     <i class="bi bi-file-earmark-plus display-4 text-primary"></i>
                     <h5 class="card-title mt-3">Submit Claim</h5>
-                    <p class="card-text">Record new working hours and submit your monthly claim.</p>
+                    <p class="card-text text-muted">Record new working hours and submit your monthly claim.</p>
                     <a class="btn btn-primary" asp-controller="Lecturer" asp-action="SubmitClaim">Go</a>
                 </div>
             </div>
         </div>
 
-        <!-- Track Status -->
         <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
+            <div class="card shadow-sm border-0 h-100 hover-zoom">
                 <div class="card-body text-center">
                     <i class="bi bi-clipboard-data display-4 text-success"></i>
                     <h5 class="card-title mt-3">Track Status</h5>
-                    <p class="card-text">View the progress and approval status of submitted claims.</p>
+                    <p class="card-text text-muted">View the progress and approval status of submitted claims.</p>
                     <a class="btn btn-success" asp-controller="Lecturer" asp-action="TrackStatus">Go</a>
                 </div>
             </div>
         </div>
 
-        <!-- Upload Documents -->
         <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
+            <div class="card shadow-sm border-0 h-100 hover-zoom">
                 <div class="card-body text-center">
                     <i class="bi bi-upload display-4 text-info"></i>
                     <h5 class="card-title mt-3">Upload Documents</h5>
-                    <p class="card-text">Attach supporting evidence such as schedules and contracts.</p>
+                    <p class="card-text text-muted">Attach supporting evidence such as schedules and contracts.</p>
                     <a class="btn btn-info text-white" asp-controller="Lecturer" asp-action="UploadDocument">Go</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .hover-zoom:hover {
+        transform: scale(1.03);
+        transition: 0.3s ease;
+    }
+</style>

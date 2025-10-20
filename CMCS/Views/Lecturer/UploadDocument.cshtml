@@ -1,16 +1,109 @@
 ﻿@{
     ViewData["Title"] = "Upload Document";
+    var claims = ViewBag.Claims as List<CMCS.Models.Claim>;
 }
 
 <div class="container mt-4">
     <h2 class="text-primary fw-bold mb-3">Upload Supporting Documents</h2>
 
-    <form enctype="multipart/form-data">
-        <div class="mb-3">
-            <label class="form-label">Select File</label>
-            <input type="file" class="form-control" disabled />
+    <!-- Success & Error Alerts -->
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @ViewBag.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        <button type="submit" class="btn btn-info text-white" disabled>Upload (Prototype)</button>
+    }
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @ViewBag.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Upload Form -->
+    <form asp-action="UploadDocument" method="post" enctype="multipart/form-data" class="shadow p-4 rounded bg-light">
+        <div class="mb-3">
+            <label for="claimId" class="form-label fw-semibold">Select Claim</label>
+            <select id="claimId" name="claimId" class="form-select" required>
+                <option value="">-- Select a Claim --</option>
+                @if (claims != null && claims.Any())
+                {
+                    foreach (var claim in claims)
+                    {
+                        <option value="@claim.ClaimID">
+                            Claim #@claim.ClaimID - @claim.ClaimDate.ToShortDateString() (@claim.Status)
+                        </option>
+                    }
+                }
+                else
+                {
+                    <option disabled>No claims available</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="file" class="form-label fw-semibold">Choose File</label>
+            <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.png" required />
+            <div class="form-text">Accepted formats: PDF, Word, JPG, PNG (max size 5MB)</div>
+        </div>
+
+        <button type="submit" class="btn btn-info text-white fw-semibold w-100">
+            <i class="bi bi-upload"></i> Upload Document
+        </button>
     </form>
+
+    <hr class="my-4" />
+
+    <!-- Display Uploaded Documents -->
+    <h4 class="text-secondary mt-4">Recently Uploaded Files</h4>
+    <div class="table-responsive shadow-sm">
+        <table class="table table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>File Name</th>
+                    <th>Type</th>
+                    <th>Date Uploaded</th>
+                    <th>Claim ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (claims != null && claims.Any())
+                {
+                    var uploadedDocs = new List<CMCS.Models.Document>();
+                    foreach (var claim in claims)
+                    {
+                        var docs = new List<CMCS.Models.Document>(); // Placeholder if you extend ViewBag for documents
+                    }
+
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            Uploaded documents will appear here once the feature is expanded.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            No claims found to display documents for.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
+<style>
+    .form-select:focus, .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+    }
+
+    table th {
+        font-weight: 600;
+    }
+</style>

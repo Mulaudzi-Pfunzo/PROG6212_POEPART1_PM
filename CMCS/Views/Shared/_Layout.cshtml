@@ -9,6 +9,38 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CMCS.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+
+    <style>
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1080;
+        }
+
+        .toast {
+            min-width: 280px;
+            font-size: 0.95rem;
+        }
+
+        .toast-header strong {
+            font-size: 1rem;
+        }
+
+        .gradient-navbar {
+            background: linear-gradient(90deg, #0d6efd 0%, #0056b3 100%);
+        }
+
+        .wave-divider svg {
+            display: block;
+            width: 100%;
+            height: 60px;
+        }
+
+        .footer-modern {
+            background: #f5f7fa;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -77,6 +109,40 @@
         </div>
     </header>
 
+    <!-- Toast/Alert Messages -->
+    <div class="toast-container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="toast align-items-center text-white bg-success border-0 show" role="alert">
+                <div class="toast-header bg-success text-white">
+                    <strong class="me-auto"><i class="bi bi-check-circle"></i> Success</strong>
+                    <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">@TempData["Success"]</div>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="toast align-items-center text-white bg-danger border-0 show" role="alert">
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto"><i class="bi bi-exclamation-triangle"></i> Error</strong>
+                    <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">@TempData["Error"]</div>
+            </div>
+        }
+        @if (TempData["Info"] != null)
+        {
+            <div class="toast align-items-center text-white bg-info border-0 show" role="alert">
+                <div class="toast-header bg-info text-white">
+                    <strong class="me-auto"><i class="bi bi-info-circle"></i> Info</strong>
+                    <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">@TempData["Info"]</div>
+            </div>
+        }
+    </div>
+
     <!-- Main Content -->
     <div class="container mt-4">
         <main role="main" class="pb-3">
@@ -95,7 +161,19 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Auto-hide toasts after 4 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            const toastList = toastElList.map(function (toastEl) {
+                const t = new bootstrap.Toast(toastEl, { delay: 4000 });
+                t.show();
+                return t;
+            });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
