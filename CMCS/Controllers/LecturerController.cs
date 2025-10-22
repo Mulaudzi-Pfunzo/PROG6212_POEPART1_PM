@@ -57,12 +57,12 @@ namespace CMCS.Controllers
 
             try
             {
-                // Assign demo Lecturer (since login is not yet integrated)
-                claim.LecturerID = 1; // Use the seeded LecturerID (e.g., John Doe)
+                
+                claim.LecturerID = 1; 
                 claim.ClaimDate = DateTime.Now;
                 claim.Status = "Pending";
 
-                // Save claim first to generate ClaimID
+                
                 _context.Claims.Add(claim);
                 await _context.SaveChangesAsync();
 

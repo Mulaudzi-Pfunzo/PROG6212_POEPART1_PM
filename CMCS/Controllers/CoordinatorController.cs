@@ -41,7 +41,7 @@ namespace CMCS.Controllers
         {
             try
             {
-                // Join Claims with Lecturers for display (avoid .Include() on scalar property)
+                
                 var claims = _context.Claims
                     .Join(
                         _context.Lecturers,
@@ -124,7 +124,7 @@ namespace CMCS.Controllers
                 _context.AuditTrails.Add(new AuditTrail
                 {
                     ClaimID = claimId,
-                    RoleID = 2, // Coordinator role
+                    RoleID = 2, 
                     ActionType = status,
                     ActionDate = DateTime.Now,
                     Comments = comments
