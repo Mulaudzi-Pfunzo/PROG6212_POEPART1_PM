@@ -104,7 +104,7 @@ namespace CMCS.Controllers
 
 
         // ===========================
-        // Track Status
+        // Track Status (UPDATED VERSION)
         // ===========================
         public async Task<IActionResult> TrackStatus()
         {
@@ -122,7 +122,6 @@ namespace CMCS.Controllers
                 return View(new List<Claim>());
             }
         }
-
 
         // ===========================
         // Upload Document (GET)

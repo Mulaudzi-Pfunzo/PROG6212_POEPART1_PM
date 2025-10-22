@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Manage Approvals";
+    // We keep 'var claims = Model as IEnumerable<dynamic>;' because this is the structure your current controller returns.
     var claims = Model as IEnumerable<dynamic>;
 }
 
@@ -52,7 +53,10 @@
                             <td>@claim.LecturerName</td>
                             <td>@Convert.ToDateTime(claim.ClaimDate).ToShortDateString()</td>
                             <td>@claim.HoursWorked</td>
-                            <td>R @(claim.HoursWorked* claim.HourlyRate)</td>
+
+                            @* FIX: Cast HoursWorked to decimal before multiplication and format the output. *@
+                            <td>R @(((decimal)claim.HoursWorked * claim.HourlyRate).ToString("N2"))</td>
+
                             <td><span class="badge @badgeClass">@claim.Status</span></td>
                             <td>
                                 <a asp-action="ViewClaimDetails" asp-route-id="@claim.ClaimID"

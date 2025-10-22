@@ -20,7 +20,7 @@ namespace CMCS.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Claim ↔ Lecturer (1-to-many)
+            // Claim ↔ Lecturer (1-to-many) - Relies on the clean model now
             modelBuilder.Entity<Claim>()
                 .HasOne<Lecturer>()
                 .WithMany()
