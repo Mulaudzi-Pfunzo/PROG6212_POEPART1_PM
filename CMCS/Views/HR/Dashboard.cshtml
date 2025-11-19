@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "HR Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold mb-4 text-center">HR Dashboard</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-success bg-gradient text-white text-center">
+                <div class="card-body">
+                    <i class="bi bi-check-circle display-4 mb-2"></i>
+                    <h6 class="card-title fw-bold">Approved Claims</h6>
+                    <h3 class="display-6">@ViewBag.ApprovedCount</h3>
+                    <a asp-controller="HR" asp-action="ApprovedClaims" class="btn btn-light btn-sm mt-2">Process</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-warning bg-gradient text-white text-center">
+                <div class="card-body">
+                    <i class="bi bi-hourglass-split display-4 mb-2"></i>
+                    <h6 class="card-title fw-bold">Pending Claims</h6>
+                    <h3 class="display-6">@ViewBag.PendingCount</h3>
+                    <a asp-controller="Coordinator" asp-action="Approvals" class="btn btn-light btn-sm mt-2">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-primary bg-gradient text-white text-center">
+                <div class="card-body">
+                    <i class="bi bi-people display-4 mb-2"></i>
+                    <h6 class="card-title fw-bold">Total Lecturers</h6>
+                    <h3 class="display-6">@ViewBag.TotalLecturers</h3>
+                    <a asp-controller="HR" asp-action="ManageLecturers" class="btn btn-light btn-sm mt-2">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 bg-info bg-gradient text-white text-center">
+                <div class="card-body">
+                    <i class="bi bi-wallet2 display-4 mb-2"></i>
+                    <h6 class="card-title fw-bold">Payments Recorded</h6>
+                    <h3 class="display-6">@ViewBag.PaidCount</h3>
+                    <a asp-controller="HR" asp-action="ExportPaymentsCsv" class="btn btn-light btn-sm mt-2">Export CSV</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5 class="fw-bold mb-3 text-secondary">Quick Actions</h5>
+                <a asp-controller="HR" asp-action="ApprovedClaims" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-collection"></i> Approved Claims
+                </a>
+                <a asp-controller="HR" asp-action="ManageLecturers" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-person-lines-fill"></i> Lecturer Management
+                </a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-dark">
+                    <i class="bi bi-house"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card .display-6 {
+        line-height: 1;
+    }
+</style>
