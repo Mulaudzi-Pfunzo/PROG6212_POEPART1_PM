@@ -1,0 +1,112 @@
+﻿@model CMCS.Models.Claim
+@{
+    ViewData["Title"] = "Process Payment";
+    var lecturer = ViewBag.Lecturer as CMCS.Models.Lecturer;
+    var total = ViewBag.TotalAmount as decimal? ?? ((decimal)Model.HoursWorked * Model.HourlyRate);
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold mb-3">Process Payment for Claim #@Model.ClaimID</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-receipt"></i> Claim Details</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-5">Claim ID:</dt>
+                        <dd class="col-7">@Model.ClaimID</dd>
+
+                        <dt class="col-5">Submitted:</dt>
+                        <dd class="col-7">@Model.ClaimDate.ToShortDateString()</dd>
+
+                        <dt class="col-5">Hours Worked:</dt>
+                        <dd class="col-7">@Model.HoursWorked</dd>
+
+                        <dt class="col-5">Hourly Rate:</dt>
+                        <dd class="col-7">R @Model.HourlyRate.ToString("0.00")</dd>
+
+                        <dt class="col-5">Total Amount:</dt>
+                        <dd class="col-7 fw-bold text-success">R @total.ToString("0.00")</dd>
+
+                        <dt class="col-5">Status:</dt>
+                        <dd class="col-7">
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> @Model.Status</span>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-person-badge"></i> Lecturer</h5>
+                </div>
+                <div class="card-body">
+                    @if (lecturer != null)
+                    {
+                        <p class="mb-1"><strong>@lecturer.FirstName @lecturer.LastName</strong></p>
+                        <p class="mb-1">@lecturer.Email</p>
+                        <p class="mb-0">@lecturer.Phone</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Lecturer information not available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-wallet2"></i> Record Payment</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ConfirmPayment" method="post" class="g-3">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="claimId" value="@Model.ClaimID" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Payment Reference</label>
+                            <input type="text" name="referenceNumber" class="form-control" placeholder="Enter payment reference" required />
+                            <div class="form-text">E.g. Bank reference or batch number.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Amount (R)</label>
+                            <input type="text" class="form-control" value="@total.ToString("0.00")" readonly />
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="ApprovedClaims" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check2-circle"></i> Confirm & Record Payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-muted small">
+                <p><strong>Note:</strong> This action will create a payment record and will NOT modify coordinator approvals. Only claims with status <span class="badge bg-success">Approved</span> should be processed here.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    dl dt {
+        font-weight: 600;
+    }
+</style>
