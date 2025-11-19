@@ -1,0 +1,47 @@
+﻿@model IEnumerable<CMCS.Models.Lecturer>
+@{
+    ViewData["Title"] = "Manage Lecturers";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold mb-3">Lecturer Management</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th>Staff #</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var l in Model)
+                {
+                    <tr>
+                        <td>@l.StaffNumber</td>
+                        <td>@l.FirstName @l.LastName</td>
+                        <td>@l.Email</td>
+                        <td>@l.Phone</td>
+                        <td>
+                            <a asp-action="EditLecturer" asp-route-id="@l.LecturerID" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
