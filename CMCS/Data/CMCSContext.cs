@@ -16,11 +16,14 @@ namespace CMCS.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<AuditTrail> AuditTrails { get; set; }
 
+        // NEW: HR Payment Records Table
+        public DbSet<HrPaymentRecord> HrPaymentRecords { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Claim ↔ Lecturer (1-to-many) - Relies on the clean model now
+            // Claim ↔ Lecturer (1-to-many)
             modelBuilder.Entity<Claim>()
                 .HasOne<Lecturer>()
                 .WithMany()
@@ -39,6 +42,20 @@ namespace CMCS.Data
                 .HasOne<Claim>()
                 .WithMany()
                 .HasForeignKey(n => n.ClaimID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // NEW: HrPaymentRecord ↔ Claim
+            modelBuilder.Entity<HrPaymentRecord>()
+                .HasOne<Claim>()
+                .WithMany()
+                .HasForeignKey(p => p.ClaimID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // NEW: HrPaymentRecord ↔ Lecturer
+            modelBuilder.Entity<HrPaymentRecord>()
+                .HasOne<Lecturer>()
+                .WithMany()
+                .HasForeignKey(p => p.LecturerID)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
