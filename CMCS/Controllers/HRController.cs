@@ -15,9 +15,13 @@ namespace CMCS.Controllers
             _context = context;
         }
 
-        // =====================================================
+        // 0. DEFAULT INDEX → REDIRECT TO DASHBOARD
+        public IActionResult Index()
+        {
+            return RedirectToAction("Dashboard");
+        }
+
         // 1. HR DASHBOARD
-        // =====================================================
         public async Task<IActionResult> Dashboard()
         {
             ViewBag.ApprovedCount = await _context.Claims.CountAsync(c => c.Status == "Approved");
@@ -28,72 +32,55 @@ namespace CMCS.Controllers
             return View();
         }
 
-        // =====================================================
-        // 2. LIST APPROVED CLAIMS (READY FOR PAYMENT)
-        // =====================================================
+        // 2. LIST APPROVED CLAIMS (READY FOR PAYMENT) → FIXED
         public async Task<IActionResult> ApprovedClaims()
         {
             var claims = await _context.Claims
                 .Where(c => c.Status == "Approved")
-                .Select(c => new
-                {
-                    c.ClaimID,
-                    c.ClaimDate,
-                    c.HoursWorked,
-                    c.HourlyRate,
-                    TotalAmount = (decimal)c.HoursWorked * c.HourlyRate,
-                    Lecturer = _context.Lecturers.FirstOrDefault(l => l.LecturerID == c.LecturerID)
-                })
+                .Include(c => c.Lecturer) // properly include Lecturer
                 .ToListAsync();
 
             return View(claims);
         }
 
-        // =====================================================
         // 3. PROCESS PAYMENT (SHOW CLAIM & LECTURER INFO)
-        // =====================================================
         public async Task<IActionResult> ProcessPayment(int id)
         {
-            var claim = await _context.Claims.FirstOrDefaultAsync(c => c.ClaimID == id);
+            var claim = await _context.Claims
+                .Include(c => c.Lecturer)  // eager-load lecturer
+                .FirstOrDefaultAsync(c => c.ClaimID == id);
+
             if (claim == null)
             {
                 TempData["Error"] = "Claim not found.";
                 return RedirectToAction("ApprovedClaims");
             }
 
-            var lecturer = await _context.Lecturers.FirstOrDefaultAsync(l => l.LecturerID == claim.LecturerID);
-
-            ViewBag.Lecturer = lecturer;
-            ViewBag.TotalAmount = (decimal)claim.HoursWorked * claim.HourlyRate;
+            ViewBag.Lecturer = claim.Lecturer;
+            ViewBag.TotalAmount = claim.TotalAmount;
 
             return View(claim);
         }
 
-        // =====================================================
         // 4. CONFIRM PAYMENT → CREATE HrPaymentRecord
-        // =====================================================
         [HttpPost]
         public async Task<IActionResult> ConfirmPayment(int claimId, string referenceNumber)
         {
-            var claim = await _context.Claims.FirstOrDefaultAsync(c => c.ClaimID == claimId);
+            var claim = await _context.Claims
+                .Include(c => c.Lecturer) // ensure lecturer is loaded
+                .FirstOrDefaultAsync(c => c.ClaimID == claimId);
+
             if (claim == null)
             {
                 TempData["Error"] = "Claim not found.";
-                return RedirectToAction("ApprovedClaims");
-            }
-
-            var lecturer = await _context.Lecturers.FirstOrDefaultAsync(l => l.LecturerID == claim.LecturerID);
-            if (lecturer == null)
-            {
-                TempData["Error"] = "Lecturer not found.";
                 return RedirectToAction("ApprovedClaims");
             }
 
             var record = new HrPaymentRecord
             {
                 ClaimID = claim.ClaimID,
-                LecturerID = lecturer.LecturerID,
-                Amount = (decimal)claim.HoursWorked * claim.HourlyRate,
+                LecturerID = claim.Lecturer.LecturerID,
+                Amount = claim.TotalAmount,
                 PaidDate = DateTime.Now,
                 PaymentReference = referenceNumber
             };
@@ -105,9 +92,8 @@ namespace CMCS.Controllers
             return RedirectToAction("ApprovedClaims");
         }
 
-        // =====================================================
+
         // 5. EXPORT PAYMENT HISTORY AS CSV
-        // =====================================================
         public async Task<IActionResult> ExportPaymentsCsv()
         {
             var records = await _context.HrPaymentRecords
@@ -126,9 +112,7 @@ namespace CMCS.Controllers
             return File(bytes, "text/csv", "PaymentHistory.csv");
         }
 
-        // =====================================================
         // 6. PAYMENT INVOICE (PRINTABLE)
-        // =====================================================
         public async Task<IActionResult> PaymentInvoice(int id)
         {
             var record = await _context.HrPaymentRecords.FirstOrDefaultAsync(r => r.PaymentRecordID == id);
@@ -138,27 +122,24 @@ namespace CMCS.Controllers
                 return RedirectToAction("Dashboard");
             }
 
-            var claim = await _context.Claims.FirstOrDefaultAsync(c => c.ClaimID == record.ClaimID);
-            var lecturer = await _context.Lecturers.FirstOrDefaultAsync(l => l.LecturerID == record.LecturerID);
+            var claim = await _context.Claims
+                .Include(c => c.Lecturer)
+                .FirstOrDefaultAsync(c => c.ClaimID == record.ClaimID);
 
             ViewBag.Claim = claim;
-            ViewBag.Lecturer = lecturer;
+            ViewBag.Lecturer = claim?.Lecturer;
 
             return View(record);
         }
 
-        // =====================================================
         // 7. MANAGE LECTURERS
-        // =====================================================
         public async Task<IActionResult> ManageLecturers()
         {
             var lecturers = await _context.Lecturers.OrderBy(l => l.LastName).ToListAsync();
             return View(lecturers);
         }
 
-        // =====================================================
         // 8. EDIT LECTURER (GET)
-        // =====================================================
         public async Task<IActionResult> EditLecturer(int id)
         {
             var lecturer = await _context.Lecturers.FirstOrDefaultAsync(l => l.LecturerID == id);
@@ -171,9 +152,7 @@ namespace CMCS.Controllers
             return View(lecturer);
         }
 
-        // =====================================================
         // 9. EDIT LECTURER (POST)
-        // =====================================================
         [HttpPost]
         public async Task<IActionResult> EditLecturer(Lecturer lecturer)
         {

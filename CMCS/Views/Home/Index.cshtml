@@ -13,7 +13,8 @@
     </div>
 
     <div class="row g-4 text-center">
-        <div class="col-md-6">
+        <!-- Lecturer Card -->
+        <div class="col-md-4">
             <div class="card h-100 shadow-sm border-0 rounded-4 p-4">
                 <div class="card-body">
                     <i class="bi bi-person-workspace text-primary display-4 mb-3"></i>
@@ -26,7 +27,8 @@
             </div>
         </div>
 
-        <div class="col-md-6">
+        <!-- Coordinator Card -->
+        <div class="col-md-4">
             <div class="card h-100 shadow-sm border-0 rounded-4 p-4">
                 <div class="card-body">
                     <i class="bi bi-people text-success display-4 mb-3"></i>
@@ -35,6 +37,20 @@
                         Efficiently verify and approve claims with a streamlined, intuitive interface. CMCS provides a clear overview of all pending claims, allowing for quick and accurate processing.
                     </p>
                     <a asp-controller="Coordinator" asp-action="Approvals" class="btn btn-success mt-3">Manage Claims</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- HR Card -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 rounded-4 p-4">
+                <div class="card-body">
+                    <i class="bi bi-cash-stack text-warning display-4 mb-3"></i>
+                    <h5 class="card-title fw-bold">For HR</h5>
+                    <p class="card-text text-muted">
+                        Automate claim processing and generate payment reports for lecturers. Manage payment records efficiently with a secure and intuitive interface.
+                    </p>
+                    <a asp-controller="HR" asp-action="Index" class="btn btn-warning mt-3">Manage Payments</a>
                 </div>
             </div>
         </div>

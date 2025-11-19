@@ -16,5 +16,10 @@ namespace CMCS.Models
 
         [NotMapped]
         public decimal TotalAmount => (decimal)HoursWorked * HourlyRate; // Calculated amount
+
+        // =========================
+        // NAVIGATION PROPERTY (Fix)
+        // =========================
+        public Lecturer? Lecturer { get; set; }         // <-- Add this
     }
 }

@@ -1,7 +1,10 @@
-﻿namespace CMCS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CMCS.Models
 {
     public class HrPaymentRecord
     {
+        [Key]
         public int PaymentRecordID { get; set; }
         public int ClaimID { get; set; }
         public int LecturerID { get; set; }
