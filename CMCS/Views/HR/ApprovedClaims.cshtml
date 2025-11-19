@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Approved Claims - HR";
+    var claims = Model as IEnumerable<dynamic>;
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold mb-3">Approved Claims (Ready for Payment)</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (claims != null && claims.Any())
+    {
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>Lecturer</th>
+                        <th>Date Submitted</th>
+                        <th>Hours</th>
+                        <th>Amount (R)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in claims)
+                    {
+                        var lecturer = c.Lecturer as CMCS.Models.Lecturer;
+                        <tr>
+                            <td>@c.ClaimID</td>
+                            <td>@(lecturer != null ? lecturer.FirstName + " " + lecturer.LastName : "Unknown")</td>
+                            <td>@Convert.ToDateTime(c.ClaimDate).ToShortDateString()</td>
+                            <td>@c.HoursWorked</td>
+                            <td>R @((decimal)c.TotalAmount).ToString("N2")</td>
+                            <td>
+                                <a asp-controller="HR" asp-action="ProcessPayment" asp-route-id="@c.ClaimID" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-cash-stack"></i> Process
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle"></i> No approved claims found.
+        </div>
+    }
+</div>
+
+<style>
+    table th {
+        font-weight: 600;
+    }
+</style>
