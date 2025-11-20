@@ -9,6 +9,8 @@
         public string Email { get; set; } = "";
         public string Phone { get; set; } = "";
         public string StaffNumber { get; set; } = ""; // Unique staff reference
+
+        public ICollection<Claim>? Claims { get; set; }
     }
 }
 

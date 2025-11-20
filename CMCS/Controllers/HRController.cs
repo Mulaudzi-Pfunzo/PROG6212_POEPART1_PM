@@ -32,28 +32,34 @@ namespace CMCS.Controllers
             return View();
         }
 
-        // 2. LIST APPROVED CLAIMS (READY FOR PAYMENT) → FIXED
+        // 2. LIST APPROVED CLAIMS (READY FOR PAYMENT)
         public async Task<IActionResult> ApprovedClaims()
         {
             var claims = await _context.Claims
                 .Where(c => c.Status == "Approved")
-                .Include(c => c.Lecturer) // properly include Lecturer
+                .Include(c => c.Lecturer) // ensure lecturer loads
                 .ToListAsync();
 
             return View(claims);
         }
 
-        // 3. PROCESS PAYMENT (SHOW CLAIM & LECTURER INFO)
+        // 3. PROCESS PAYMENT (SHOW CLAIM + LECTURER INFO)
         public async Task<IActionResult> ProcessPayment(int id)
         {
             var claim = await _context.Claims
-                .Include(c => c.Lecturer)  // eager-load lecturer
+                .Include(c => c.Lecturer)
                 .FirstOrDefaultAsync(c => c.ClaimID == id);
 
             if (claim == null)
             {
                 TempData["Error"] = "Claim not found.";
                 return RedirectToAction("ApprovedClaims");
+            }
+
+            // Safety fallback if navigation didn't load
+            if (claim.Lecturer == null)
+            {
+                claim.Lecturer = await _context.Lecturers.FindAsync(claim.LecturerID);
             }
 
             ViewBag.Lecturer = claim.Lecturer;
@@ -67,7 +73,7 @@ namespace CMCS.Controllers
         public async Task<IActionResult> ConfirmPayment(int claimId, string referenceNumber)
         {
             var claim = await _context.Claims
-                .Include(c => c.Lecturer) // ensure lecturer is loaded
+                .Include(c => c.Lecturer)
                 .FirstOrDefaultAsync(c => c.ClaimID == claimId);
 
             if (claim == null)
@@ -76,10 +82,17 @@ namespace CMCS.Controllers
                 return RedirectToAction("ApprovedClaims");
             }
 
+            // SAFETY FIX: Ensure lecturer navigation is not null
+            if (claim.Lecturer == null)
+            {
+                claim.Lecturer = await _context.Lecturers.FindAsync(claim.LecturerID);
+            }
+
+            // FIXED: Use FK claim.LecturerID instead of claim.Lecturer.LecturerID
             var record = new HrPaymentRecord
             {
                 ClaimID = claim.ClaimID,
-                LecturerID = claim.Lecturer.LecturerID,
+                LecturerID = claim.LecturerID,    // FIXED — no null reference possible
                 Amount = claim.TotalAmount,
                 PaidDate = DateTime.Now,
                 PaymentReference = referenceNumber
@@ -91,7 +104,6 @@ namespace CMCS.Controllers
             TempData["Success"] = "Payment successfully recorded.";
             return RedirectToAction("ApprovedClaims");
         }
-
 
         // 5. EXPORT PAYMENT HISTORY AS CSV
         public async Task<IActionResult> ExportPaymentsCsv()
@@ -115,7 +127,9 @@ namespace CMCS.Controllers
         // 6. PAYMENT INVOICE (PRINTABLE)
         public async Task<IActionResult> PaymentInvoice(int id)
         {
-            var record = await _context.HrPaymentRecords.FirstOrDefaultAsync(r => r.PaymentRecordID == id);
+            var record = await _context.HrPaymentRecords
+                .FirstOrDefaultAsync(r => r.PaymentRecordID == id);
+
             if (record == null)
             {
                 TempData["Error"] = "Payment record not found.";
@@ -126,6 +140,11 @@ namespace CMCS.Controllers
                 .Include(c => c.Lecturer)
                 .FirstOrDefaultAsync(c => c.ClaimID == record.ClaimID);
 
+            if (claim?.Lecturer == null)
+            {
+                claim.Lecturer = await _context.Lecturers.FindAsync(claim.LecturerID);
+            }
+
             ViewBag.Claim = claim;
             ViewBag.Lecturer = claim?.Lecturer;
 
@@ -135,14 +154,19 @@ namespace CMCS.Controllers
         // 7. MANAGE LECTURERS
         public async Task<IActionResult> ManageLecturers()
         {
-            var lecturers = await _context.Lecturers.OrderBy(l => l.LastName).ToListAsync();
+            var lecturers = await _context.Lecturers
+                .OrderBy(l => l.LastName)
+                .ToListAsync();
+
             return View(lecturers);
         }
 
         // 8. EDIT LECTURER (GET)
         public async Task<IActionResult> EditLecturer(int id)
         {
-            var lecturer = await _context.Lecturers.FirstOrDefaultAsync(l => l.LecturerID == id);
+            var lecturer = await _context.Lecturers
+                .FirstOrDefaultAsync(l => l.LecturerID == id);
+
             if (lecturer == null)
             {
                 TempData["Error"] = "Lecturer not found.";
