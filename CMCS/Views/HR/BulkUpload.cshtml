@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Bulk Payment Upload";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold mb-3">Bulk Upload Payments (CSV)</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <p class="text-muted">Upload a CSV file containing payment records in the following format:</p>
+
+            <pre class="bg-light p-3 border rounded">
+PaymentRecordID,ClaimID,LecturerID,Amount,PaidDate,Reference
+1,1,1,8000,2025-11-20,abc
+            </pre>
+
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Select CSV File</label>
+                    <input type="file" name="csvFile" class="form-control" accept=".csv" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-upload"></i> Upload CSV
+                </button>
+
+                <a asp-action="Dashboard" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

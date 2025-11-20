@@ -192,5 +192,79 @@ namespace CMCS.Controllers
             TempData["Success"] = "Lecturer information updated successfully.";
             return RedirectToAction("ManageLecturers");
         }
+
+        // ===============================
+        // 10. BULK PAYMENT CSV UPLOAD
+        // ===============================
+
+        // GET: HR/BulkUpload
+        public IActionResult BulkUpload()
+        {
+            return View();
+        }
+
+        // POST: HR/BulkUpload
+        [HttpPost]
+        public async Task<IActionResult> BulkUpload(IFormFile csvFile)
+        {
+            if (csvFile == null || csvFile.Length == 0)
+            {
+                TempData["Error"] = "Please upload a CSV file.";
+                return View();
+            }
+
+            var recordsAdded = 0;
+
+            try
+            {
+                using (var stream = new StreamReader(csvFile.OpenReadStream()))
+                {
+                    // First row is header → skip
+                    await stream.ReadLineAsync();
+
+                    while (!stream.EndOfStream)
+                    {
+                        var line = await stream.ReadLineAsync();
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+
+                        // Split CSV
+                        var parts = line.Split(',');
+
+                        if (parts.Length < 6)
+                            continue; // skip invalid rows
+
+                        // Parse validated values
+                        int claimId = int.Parse(parts[1]);
+                        int lecturerId = int.Parse(parts[2]);
+                        decimal amount = decimal.Parse(parts[3]);
+                        DateTime paidDate = DateTime.Parse(parts[4]);
+                        string reference = parts[5];
+
+                        var newRecord = new HrPaymentRecord
+                        {
+                            ClaimID = claimId,
+                            LecturerID = lecturerId,
+                            Amount = amount,
+                            PaidDate = paidDate,
+                            PaymentReference = reference
+                        };
+
+                        _context.HrPaymentRecords.Add(newRecord);
+                        recordsAdded++;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                TempData["Success"] = $"{recordsAdded} payment records successfully imported.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error reading CSV file: " + ex.Message;
+            }
+
+            return RedirectToAction("Dashboard");
+        }
+
     }
 }

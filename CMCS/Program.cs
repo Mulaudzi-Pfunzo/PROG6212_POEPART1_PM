@@ -49,11 +49,14 @@ namespace CMCS
             var app = builder.Build();
 
             // ==============================
-            // Seed In-Memory Lecturers (Your Original Logic Restored)
+            // Seed In-Memory Lecturers & Ensure Database Created
             // ==============================
             using (var scope = app.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<CMCSContext>();
+
+                // Ensure database is created / updated
+                context.Database.EnsureCreated(); // <-- Added for DB update
 
                 if (!context.Lecturers.Any())
                 {

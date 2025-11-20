@@ -60,16 +60,24 @@
         </div>
     </div>
 
+    <!-- QUICK ACTIONS -->
     <div class="mt-5">
         <div class="card shadow-sm border-0">
             <div class="card-body text-center">
                 <h5 class="fw-bold mb-3 text-secondary">Quick Actions</h5>
+
                 <a asp-controller="HR" asp-action="ApprovedClaims" class="btn btn-outline-primary me-2">
                     <i class="bi bi-collection"></i> Approved Claims
                 </a>
+
                 <a asp-controller="HR" asp-action="ManageLecturers" class="btn btn-outline-secondary me-2">
                     <i class="bi bi-person-lines-fill"></i> Lecturer Management
                 </a>
+
+                <a asp-controller="HR" asp-action="BulkUpload" class="btn btn-outline-success me-2">
+                    <i class="bi bi-upload"></i> Bulk Upload Payments
+                </a>
+
                 <a asp-controller="Home" asp-action="Index" class="btn btn-outline-dark">
                     <i class="bi bi-house"></i> Back to Home
                 </a>
